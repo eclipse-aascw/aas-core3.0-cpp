@@ -45,6 +45,130 @@ def _add_license_headers(target_path: pathlib.Path) -> None:
         path.write_text(_prepend_license_header(text), encoding="utf-8")
 
 
+# NOTE (aaronzi, 2026-11-05):
+# The base64 encoder and decoder in the generated stringification.cpp have been
+# adapted from other projects. We mark them with REUSE snippet tags to keep the
+# copyright and license of the original code. The pinned aas-core-codegen does not
+# emit these tags yet, so we replace its comments with the tagged ones ourselves.
+# Once aas-core-codegen emits the tags, this is a no-op.
+#
+# REUSE-IgnoreStart
+_BASE64_ENCODER_OLD_COMMENT = """\
+// The following encoder has been adapted from Jouni Malinen <j@w1.fi> to work with
+// std::string. The original source code is available at:
+// https://web.mit.edu/freebsd/head/contrib/wpa/src/utils/base64.c
+//
+// See also the following StackOverflow question for a benchmark:
+// https://stackoverflow.com/questions/342409/how-do-i-base64-encode-decode-in-c/41094722#41094722
+"""
+
+_BASE64_ENCODER_NEW_COMMENT = """\
+// SPDX-SnippetBegin
+// SPDX-SnippetCopyrightText: 2005-2011 Jouni Malinen <j@w1.fi>
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// The following encoder has been adapted from base64.c of wpa_supplicant/hostapd
+// by Jouni Malinen <j@w1.fi> to work with std::string. The original source code
+// is available at:
+// https://web.mit.edu/freebsd/head/contrib/wpa/src/utils/base64.c
+//
+// See also the following StackOverflow question for a benchmark:
+// https://stackoverflow.com/questions/342409/how-do-i-base64-encode-decode-in-c/41094722#41094722
+"""
+
+_BASE64_DECODER_OLD_COMMENT = """\
+// The following decoder is vaguely based on:
+// https://github.com/danguer/blog-examples/blob/master/js/base64-binary.js,
+// https://github.com/niklasvh/base64-arraybuffer/blob/master/src/index.ts and
+// https://github.com/beatgammit/base64-js/blob/master/index.js.
+"""
+
+_BASE64_DECODER_NEW_COMMENT = """\
+// SPDX-SnippetBegin
+// SPDX-SnippetCopyrightText: 2012 Niklas von Hertzen
+// SPDX-License-Identifier: MIT
+//
+// The following decoder has been adapted from the decode function of
+// base64-arraybuffer by Niklas von Hertzen, and extended with input validation.
+// The original source code is available at:
+// https://github.com/niklasvh/base64-arraybuffer/blob/master/src/index.ts
+"""
+
+_SNIPPET_END = "// SPDX-SnippetEnd\n"
+# REUSE-IgnoreEnd
+
+# Old comment, new comment, and the line which starts the function whose closing
+# brace ends the snippet
+_BASE64_SNIPPETS = [
+    (
+        _BASE64_ENCODER_OLD_COMMENT,
+        _BASE64_ENCODER_NEW_COMMENT,
+        "std::string Base64Encode(\n",
+    ),
+    (
+        _BASE64_DECODER_OLD_COMMENT,
+        _BASE64_DECODER_NEW_COMMENT,
+        "> Base64Decode(\n",
+    ),
+]
+
+
+def _mark_base64_snippets(text: str) -> str:
+    """
+    Mark the base64 code taken from other projects with REUSE snippet tags.
+
+    If the tagged comments are already there, the text is returned as-is. If
+    neither the original nor the tagged comments are found, raise an error, since
+    the generated code changed and the tags need to be checked by hand.
+    """
+    for old_comment, new_comment, function_start in _BASE64_SNIPPETS:
+        old_count = text.count(old_comment)
+        new_count = text.count(new_comment)
+
+        if old_count == 0 and new_count == 1:
+            continue
+
+        if old_count != 1 or new_count != 0:
+            raise RuntimeError(
+                "Expected either the original or the tagged comment "
+                f"exactly once, but found the original {old_count} time(s) "
+                f"and the tagged one {new_count} time(s). The original comment "
+                f"is:\n{old_comment}"
+            )
+
+        comment_start = text.index(old_comment)
+        text = (
+            text[:comment_start]
+            + new_comment
+            + text[comment_start + len(old_comment) :]
+        )
+
+        # The function ends with the first closing brace at the line start.
+        function_start_index = text.find(function_start, comment_start)
+        if function_start_index == -1:
+            raise RuntimeError(
+                f"Expected {function_start!r} after the comment:\n{new_comment}"
+            )
+
+        function_end = text.find("\n}\n", function_start_index)
+        if function_end == -1:
+            raise RuntimeError(f"Expected the end of the function {function_start!r}")
+
+        insert_at = function_end + len("\n}\n")
+        text = text[:insert_at] + _SNIPPET_END + text[insert_at:]
+
+    return text
+
+
+def _add_snippet_tags(target_path: pathlib.Path) -> None:
+    """Mark the base64 code taken from other projects in the generated code."""
+    path = target_path / "stringification.cpp"
+    text = path.read_text(encoding="utf-8")
+    new_text = _mark_base64_snippets(text)
+    if new_text != text:
+        path.write_text(new_text, encoding="utf-8")
+
+
 def _generate_sdk(
     meta_model_path: pathlib.Path,
     snippet_path: pathlib.Path,
@@ -66,6 +190,7 @@ def _generate_sdk(
     )
 
     _add_license_headers(target_path)
+    _add_snippet_tags(target_path)
 
 
 def main() -> int:
