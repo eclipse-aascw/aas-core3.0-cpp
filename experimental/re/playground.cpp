@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2023 aas-core3.0-cpp AUTHORS
+//
+// SPDX-License-Identifier: MIT
+
 /**
  * We provide here a playground implementation of:
  * https://swtch.com/~rsc/regexp/regexp2.html

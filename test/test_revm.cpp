@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2023 aas-core3.0-cpp AUTHORS
+//
+// SPDX-License-Identifier: MIT
+
 /**
  * Test the virtual machine for matching regular expressions.
  */

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2023 aas-core3.0-cpp AUTHORS
+//
+// SPDX-License-Identifier: MIT
+
 #include <aas_core/aas_3_0/verification.hpp>
 
 #define CATCH_CONFIG_MAIN

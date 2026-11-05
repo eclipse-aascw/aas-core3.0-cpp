@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 aas-core3.0-cpp AUTHORS
+#
+# SPDX-License-Identifier: MIT
+
 cmake_minimum_required(VERSION 3.19)
 project(aas_core3)
 

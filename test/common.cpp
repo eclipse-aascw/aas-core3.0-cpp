@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2023 aas-core3.0-cpp AUTHORS
+//
+// SPDX-License-Identifier: MIT
+
 #include "./common.hpp"
 
 #include <aas_core/aas_3_0/stringification.hpp>

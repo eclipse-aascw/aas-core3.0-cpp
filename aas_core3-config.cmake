@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 aas-core3.0-cpp AUTHORS
+#
+# SPDX-License-Identifier: MIT
+
 # NOTE (mristin):
 # This file is based on:
 # https://www.foonathan.net/2016/03/cmake-install/
