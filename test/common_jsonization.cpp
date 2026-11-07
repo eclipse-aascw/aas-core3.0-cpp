@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2023 aas-core3.0-cpp AUTHORS
+//
+// SPDX-License-Identifier: MIT
+
 #include "./common_jsonization.hpp"
 
 #include <aas_core/aas_3_0/common.hpp>

@@ -1,0 +1,44 @@
+# SPDX-FileCopyrightText: 2023 aas-core3.0-cpp AUTHORS
+#
+# SPDX-License-Identifier: MIT
+
+version = 1
+
+# Prose and metadata where a header would end up in the rendered output
+# (e.g., README shown on GitHub, the documentation rendered by Doxygen,
+# the usage text printed by vcpkg) or which can not carry a comment (JSON).
+[[annotations]]
+path = [
+    "AUTHORS",
+    "README.md",
+    "doc/**/*.md",
+    "usage-for-vcpkg",
+    "vcpkg.json",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2023 aas-core3.0-cpp AUTHORS"
+SPDX-License-Identifier = "MIT"
+
+# The snippets are inserted verbatim into the generated code by aas-core-codegen,
+# so they must not carry a header of their own.
+[[annotations]]
+path = "dev_scripts/codegen/snippets/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2023 aas-core3.0-cpp AUTHORS"
+SPDX-License-Identifier = "MIT"
+
+# Test data and the recorded test outputs are generated and compared
+# byte-by-byte, and JSON can not carry a comment.
+[[annotations]]
+path = ["test_data/**", "test/testgen_rev.txt"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2023 aas-core3.0-cpp AUTHORS"
+SPDX-License-Identifier = "MIT"
+
+# Catch2 is a third-party test framework, vendored as a single header.
+# We keep it unchanged under its original copyright and license.
+[[annotations]]
+path = "test-external/catch2/catch.hpp"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2022 Two Blue Cubes Ltd."
+SPDX-License-Identifier = "BSL-1.0"

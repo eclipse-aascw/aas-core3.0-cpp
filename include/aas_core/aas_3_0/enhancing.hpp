@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2023 aas-core3.0-cpp AUTHORS
+//
+// SPDX-License-Identifier: MIT
+
 #ifndef AAS_CORE_AAS_3_0_ENHANCING_GUARD_
 #define AAS_CORE_AAS_3_0_ENHANCING_GUARD_
 
