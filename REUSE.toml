@@ -42,3 +42,20 @@ path = "test-external/catch2/catch.hpp"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2022 Two Blue Cubes Ltd."
 SPDX-License-Identifier = "BSL-1.0"
+
+# The meta-model and the code generated from it transcribe the AAS
+# specification: the docstrings and the doc comments derived from them quote
+# the definitions of the classes, attributes and constraints. That text keeps
+# the license of the specification, next to the MIT license of our own code.
+# The specifications published by IDTA are licensed under CC BY 4.0.
+[[annotations]]
+path = [
+    "dev_scripts/codegen/meta_model.py",
+    "include/aas_core/aas_3_0/constants.hpp",
+    "include/aas_core/aas_3_0/types.hpp",
+    "include/aas_core/aas_3_0/verification.hpp",
+    "src/verification.cpp",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Industrial Digital Twin Association e. V."
+SPDX-License-Identifier = "CC-BY-4.0"
